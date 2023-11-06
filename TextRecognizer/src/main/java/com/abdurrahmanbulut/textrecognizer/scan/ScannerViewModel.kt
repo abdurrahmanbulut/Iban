@@ -23,6 +23,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.abdurrahmanbulut.textrecognizer.UIEvent
 import com.abdurrahmanbulut.textrecognizer.utils.crop
+import com.abdurrahmanbulut.textrecognizer.utils.cropByPercentage
 import com.abdurrahmanbulut.textrecognizer.utils.getTextByInputImage
 import com.abdurrahmanbulut.textrecognizer.utils.toBitmap
 import com.google.mlkit.vision.common.InputImage
@@ -101,7 +102,8 @@ internal class ScannerViewModel : ViewModel(){
         if (mediaImage != null) {
 
             val imageBitmap = mediaImage.toBitmap(imageProxy.imageInfo.rotationDegrees)
-            val croppedBitmap = imageBitmap.crop(imageBitmap.width / 2, imageBitmap.height / 2, 240, 60)
+//            val croppedBitmap = imageBitmap.crop(imageBitmap.width / 2, imageBitmap.height / 2, 240, 60)
+            val croppedBitmap = imageBitmap.cropByPercentage(0.5f, 0.5f, 0.8f, 0.1f)
             val croppedInputImage = InputImage.fromBitmap(croppedBitmap, imageProxy.imageInfo.rotationDegrees)
 
             getTextByInputImage(croppedInputImage, regex) { result ->

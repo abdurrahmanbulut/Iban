@@ -193,6 +193,44 @@ fun Bitmap.crop(centerX: Int, centerY: Int, width: Int, height: Int): Bitmap {
 }
 
 /**
+ * Crops the Bitmap based on percentage values relative to its current dimensions.
+ *
+ * This method calculates the crop area by using percentage values that determine the
+ * position of the center and the size of the area to be cropped. The percentages are
+ * relative to the current width and height of the Bitmap. The crop is centered at the
+ * (centerX, centerY) position defined by the given percentage values. If the crop area
+ * calculated from these percentages exceeds the boundaries of the Bitmap, the crop area
+ * is adjusted to fit within the Bitmap's actual dimensions.
+ *
+ * @param centerXPercent The percentage of the Bitmap's width to find the horizontal
+ *                       center of the crop area. Must be a value between 0 and 1.
+ * @param centerYPercent The percentage of the Bitmap's height to find the vertical
+ *                       center of the crop area. Must be a value between 0 and 1.
+ * @param widthPercent The percentage of the Bitmap's width that defines the width of
+ *                     the crop area. Must be a value between 0 and 1.
+ * @param heightPercent The percentage of the Bitmap's height that defines the height
+ *                      of the crop area. Must be a value between 0 and 1.
+ * @return A new Bitmap instance that is a cropped version of the original Bitmap,
+ *         centered at the specified percentages, with dimensions proportional to
+ *         the specified width and height percentages.
+ */
+fun Bitmap.cropByPercentage(centerXPercent: Float, centerYPercent: Float, widthPercent: Float, heightPercent: Float): Bitmap {
+    val centerX = (this.width * centerXPercent).toInt()
+    val centerY = (this.height * centerYPercent).toInt()
+    val cropWidth = (this.width * widthPercent).toInt()
+    val cropHeight = (this.height * heightPercent).toInt()
+
+    val startX = (centerX - cropWidth / 2).coerceAtLeast(0)
+    val startY = (centerY - cropHeight / 2).coerceAtLeast(0)
+
+    val endX = (startX + cropWidth).coerceAtMost(this.width)
+    val endY = (startY + cropHeight).coerceAtMost(this.height)
+
+    return Bitmap.createBitmap(this, startX, startY, endX - startX, endY - startY)
+}
+
+
+/**
  * Retrieves the dimensions of an image located at a Uri without loading the full image into memory.
  *
  * This function decodes the bounds of the image referenced by the Uri to determine its dimensions.
